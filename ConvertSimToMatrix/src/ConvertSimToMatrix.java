@@ -59,9 +59,7 @@ public class ConvertSimToMatrix {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-		
+			
 		try {
 			FileReader fr2 = new FileReader(network2File); 
 			BufferedReader br2 = new BufferedReader(fr2); 
@@ -110,24 +108,31 @@ public class ConvertSimToMatrix {
 			String[] words;
 			double maxSimilarity = 0.0;
 			int count = 0;
-			if((line = br3.readLine())!=null)
-			{ 
-			    	words = line.split(" ");
-			    	maxSimilarity = Double.parseDouble(words[2]);
-			    	System.out.println("size: "+network1.size());
-			    	System.out.println("size: "+network2.size());
-			    	similarityMatrix[network1.get(words[0])][network2.get(words[1])] = 1.0;    
-			}
-			
-			count++;
+	    	System.out.println("size: "+network1.size());
+	    	System.out.println("size: "+network2.size());
 			
 			while((line = br3.readLine())!=null)
 			{ 
-				count++;
+					count++;
 					words = line.split(" ");
-			    	System.out.println(count+" - "+network1.get(words[0])+":  "+words[0]+" - "+network2.get(words[1])+": "+words[1]);
-			    	similarityMatrix[network1.get(words[0])][network2.get(words[1])] = Double.parseDouble(words[2])/maxSimilarity;    
+					if(network1.containsKey(words[0])&&network2.containsKey(words[1])) {
+						
+						if(maxSimilarity<Double.parseDouble(words[2]))
+							maxSimilarity = Double.parseDouble(words[2]);
+//						System.out.println(count+" - "+network1.get(words[0])+":  "+words[0]+" - "+network2.get(words[1])+": "+words[1]);
+				    	similarityMatrix[network1.get(words[0])][network2.get(words[1])] = Double.parseDouble(words[2]);   
+					} 
+//					    else
+//							System.err.println(count+" - "+network1.get(words[0])+":  "+words[0]+" - "+network2.get(words[1])+": "+words[1]);
+			    	 
 			}
+			
+			System.out.println("Maximum Similarity: "+maxSimilarity);
+			
+			for (int i = 0;i<similarityMatrix.length;i++)
+				for (int j = 0;j<similarityMatrix[i].length;j++)
+					similarityMatrix[i][j] = similarityMatrix[i][j]/maxSimilarity;
+			
 			br3.close();		 
 			fr3.close();
 		} catch (FileNotFoundException e) {
